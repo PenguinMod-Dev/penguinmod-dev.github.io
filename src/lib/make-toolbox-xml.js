@@ -268,7 +268,7 @@ const sensing = function (isInitialSetup, isStage) {
             <block type="sensing_touchingcolor"></block>
             <block type="sensing_coloristouchingcolor"></block>
             ${blockSeparator}
-            <block type="sensing_getxyoftouchingsprite"></block></block>
+            <block type="sensing_getxyoftouchingsprite"></block>
             <block type="sensing_distanceTo"></block>
             <block type="sensing_directionTo"></block>
             ${blockSeparator}
