@@ -462,6 +462,23 @@ const pmSoundSubmittors = [
         image: `https://penguinmod.com/unknown_user.png`,
         href: "https://studio.penguinmod.com/credits.html#",
     },
+    {
+        text: 'ImNotScratchY_lolol',
+        image: `https://trampoline.turbowarp.org/avatars/by-username/ImNotScratchY_lolol`,
+        href: "https://penguinmod.com/profile?user=ImNotScratchY_lolol",
+    },
+    {
+        text: 'justablock',
+        image: `https://trampoline.turbowarp.org/avatars/by-username/justablock`,
+        href: "https://penguinmod.com/profile?user=justablock",
+    },
+    // this person may have decided not to translate?
+    // no final info though since they still have access & havent left the server...
+    {
+        text: 'luca2756_lol',
+        image: `https://trampoline.turbowarp.org/avatars/by-username/luca2756_lol`,
+        href: "https://penguinmod.com/profile?user=luca2756_lol",
+    },
 ];
 
 const extensionDevelopers = [

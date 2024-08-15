@@ -5187,6 +5187,20 @@
         "libraryFilePage": "images/goose.svg"
     },
     {
+        "name": "Goose",
+        "tags": [
+            "animals",
+            "birds",
+            "birb"
+        ],
+        "bitmapResolution": 1,
+        "dataFormat": "svg",
+        "rotationCenterX": 0,
+        "rotationCenterY": 0,
+        "fromPenguinModLibrary": true,
+        "libraryFilePage": "images/goose.svg"
+    },
+    {
         "name": "Grasshopper-a",
         "tags": [
             "animals",
