@@ -36,9 +36,13 @@ class ListMonitor extends React.Component {
             return;
         }
 
+        let activeValue = this.props.value[index];
+        if (activeValue.toListEditor) activeValue = activeValue.toListEditor();
+
         this.setState({
             activeIndex: index,
-            activeValue: this.props.value[index]
+            activeValue,
+            handlerClass: this.props.value[index]
         });
     }
 
@@ -47,7 +51,12 @@ class ListMonitor extends React.Component {
         if (this.state.activeIndex !== null) {
             const {vm, targetId, id: variableId} = this.props;
             const newListValue = getVariableValue(vm, targetId, variableId);
-            newListValue[this.state.activeIndex] = this.state.activeValue;
+            const oldValue = this.props.value[this.state.activeIndex];
+            let newValue = this.state.activeValue;
+            if (oldValue.fromListEditor) {
+                newValue = oldValue.fromListEditor(newValue);
+            }
+            newListValue[this.state.activeIndex] = newValue;
             setVariableValue(vm, targetId, variableId, newListValue);
             this.setState({activeIndex: null, activeValue: null});
         }

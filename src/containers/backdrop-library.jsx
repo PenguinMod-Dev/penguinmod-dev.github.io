@@ -32,6 +32,11 @@ class BackdropLibrary extends React.Component {
             bitmapResolution: item.bitmapResolution,
             skinId: null
         };
+        if (item.fromPenguinModLibrary) {
+            vmBackdrop.fromPenguinModLibrary = true;
+            vmBackdrop.libraryId = item.libraryFilePage;
+            vmBackdrop.dataFormat = item.dataFormat;
+        }
         // Do not switch to stage, just add the backdrop
         this.props.vm.addBackdrop(item.md5ext, vmBackdrop);
     }
@@ -40,6 +45,7 @@ class BackdropLibrary extends React.Component {
             <LibraryComponent
                 data={getBackdropLibrary()}
                 id="backdropLibrary"
+                actor="CostumeLibrary"
                 header={"Backdrops"}
                 tags={backdropTags}
                 title={this.props.intl.formatMessage(messages.libraryTitle)}

@@ -39,9 +39,9 @@ import styles from './interface.css';
 
 const messages = defineMessages({
     defaultTitle: {
-        defaultMessage: 'A mod of TurboWarp',
+        defaultMessage: 'Playground',
         description: 'Title of homepage',
-        id: 'tw.guiDefaultTitle'
+        id: 'pm.playgroundDefaultTitle'
     }
 });
 

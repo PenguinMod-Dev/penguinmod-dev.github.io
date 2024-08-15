@@ -24,7 +24,16 @@ class UsernameModal extends React.Component {
             valueValid: !this.props.usernameInvalid
         };
     }
+    componentDidUpdate (prevProps) {
+        if (prevProps.usernameLoggedIn !== this.props.usernameLoggedIn) {
+            this.setState({
+                value: this.props.username,
+                valueValid: true
+            });
+        }
+    }
     handleKeyPress (event) {
+        if (this.props.usernameLoggedIn) return; // user is logged in
         if (event.key === 'Enter' && this.state.valueValid) {
             this.handleOk();
         }
@@ -33,6 +42,7 @@ class UsernameModal extends React.Component {
         event.target.select();
     }
     handleOk () {
+        if (this.props.usernameLoggedIn) return; // user is logged in
         this.props.onSetUsername(this.state.value);
         this.props.onCloseUsernameModal();
     }
@@ -40,12 +50,14 @@ class UsernameModal extends React.Component {
         this.props.onCloseUsernameModal();
     }
     handleChange (e) {
+        if (this.props.usernameLoggedIn) return; // user is logged in
         this.setState({
             value: e.target.value,
             valueValid: e.target.checkValidity()
         });
     }
     handleReset () {
+        if (this.props.usernameLoggedIn) return; // user is logged in
         const randomUsername = isScratchDesktop() ? 'player' : generateRandomUsername();
         this.props.onCloseUsernameModal();
         this.props.onSetUsername(randomUsername);
@@ -56,6 +68,7 @@ class UsernameModal extends React.Component {
                 mustChangeUsername={this.props.usernameInvalid}
                 value={this.state.value}
                 valueValid={this.state.valueValid}
+                usernameLoggedIn={this.props.usernameLoggedIn}
                 onKeyPress={this.handleKeyPress}
                 onFocus={this.handleFocus}
                 onOk={this.handleOk}
@@ -71,12 +84,14 @@ UsernameModal.propTypes = {
     onCloseUsernameModal: PropTypes.func,
     onSetUsername: PropTypes.func,
     username: PropTypes.string,
-    usernameInvalid: PropTypes.bool
+    usernameInvalid: PropTypes.bool,
+    usernameLoggedIn: PropTypes.bool
 };
 
 const mapStateToProps = state => ({
     username: state.scratchGui.tw.username,
-    usernameInvalid: state.scratchGui.tw.usernameInvalid
+    usernameInvalid: state.scratchGui.tw.usernameInvalid,
+    usernameLoggedIn: state.scratchGui.tw.usernameLoggedIn
 });
 
 const mapDispatchToProps = dispatch => ({

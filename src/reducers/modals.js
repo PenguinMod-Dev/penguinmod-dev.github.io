@@ -32,16 +32,20 @@ const initialState = {
     [MODAL_SETTINGS]: false,
     [MODAL_CUSTOM_EXTENSION]: false,
     [MODAL_RESTORE_POINTS]: false,
-    [MODAL_FONTS]: false
+    [MODAL_FONTS]: false,
+    extensionModalSwapId: null
 };
 
 const reducer = function (state, action) {
     if (typeof state === 'undefined') state = initialState;
     switch (action.type) {
-    case OPEN_MODAL:
-        return Object.assign({}, state, {
+    case OPEN_MODAL: {
+        const makeState = {
             [action.modal]: true
-        });
+        };
+        if (action.extensionModalSwapId) makeState.extensionModalSwapId = action.extensionModalSwapId;
+        return Object.assign({}, state, makeState);
+    }
     case CLOSE_MODAL:
         return Object.assign({}, state, {
             [action.modal]: false
@@ -50,10 +54,11 @@ const reducer = function (state, action) {
         return state;
     }
 };
-const openModal = function (modal) {
+const openModal = function (modal, extensionModalSwapId) {
     return {
         type: OPEN_MODAL,
-        modal: modal
+        modal: modal,
+        extensionModalSwapId
     };
 };
 const closeModal = function (modal) {
@@ -98,8 +103,8 @@ const openUsernameModal = function () {
 const openSettingsModal = function () {
     return openModal(MODAL_SETTINGS);
 };
-const openCustomExtensionModal = function () {
-    return openModal(MODAL_CUSTOM_EXTENSION);
+const openCustomExtensionModal = function (swapId) {
+    return openModal(MODAL_CUSTOM_EXTENSION, swapId);
 };
 const openRestorePointModal = function () {
     return openModal(MODAL_RESTORE_POINTS);

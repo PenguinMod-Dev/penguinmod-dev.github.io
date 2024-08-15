@@ -1,10 +1,10 @@
 import bindAll from 'lodash.bindall';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { injectIntl, intlShape } from 'react-intl';
+import {injectIntl, intlShape} from 'react-intl';
 
-import { connect } from 'react-redux';
-import { moveMonitorRect, resetMonitorLayout } from '../reducers/monitor-layout';
+import {connect} from 'react-redux';
+import {moveMonitorRect, resetMonitorLayout} from '../reducers/monitor-layout';
 
 import errorBoundaryHOC from '../lib/error-boundary-hoc.jsx';
 import OpcodeLabels from '../lib/opcode-labels';
@@ -12,7 +12,7 @@ import OpcodeLabels from '../lib/opcode-labels';
 import MonitorListComponent from '../components/monitor-list/monitor-list.jsx';
 
 class MonitorList extends React.Component {
-    constructor(props) {
+    constructor (props) {
         super(props);
         bindAll(this, [
             'handleMonitorChange'
@@ -22,7 +22,7 @@ class MonitorList extends React.Component {
             key: 0
         };
     }
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps (nextProps) {
         // TW: When stage size changes, we'll force all monitors to re-render completely
         // This is important because the VM moves monitors after resize to preserve locations but
         // Scratch's monitor layout logic is very complex and it won't notice that
@@ -33,10 +33,10 @@ class MonitorList extends React.Component {
             });
         }
     }
-    handleMonitorChange(id, x, y) { // eslint-disable-line no-unused-vars
+    handleMonitorChange (id, x, y) { // eslint-disable-line no-unused-vars
         this.props.moveMonitorRect(id, x, y);
     }
-    render() {
+    render () {
         return (
             <MonitorListComponent
                 onMonitorChange={this.handleMonitorChange}

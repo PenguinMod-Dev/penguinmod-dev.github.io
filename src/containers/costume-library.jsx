@@ -36,7 +36,7 @@ class CostumeLibrary extends React.PureComponent {
             vmCostume.fromPenguinModLibrary = true;
             vmCostume.libraryId = item.libraryFilePage;
             vmCostume.dataFormat = item.dataFormat;
-        };
+        }
         this.props.vm.addCostumeFromLibrary(item.md5ext, vmCostume);
     }
     render () {

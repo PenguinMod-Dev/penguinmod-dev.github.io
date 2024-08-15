@@ -5,6 +5,56 @@ import {FormattedMessage} from 'react-intl';
 import styles from './description.css';
 import {render} from 'PenguinMod-MarkDown';
 
+const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+];
+const days = [
+    'mon',
+    'tue',
+    'wed',
+    'thr',
+    'fri',
+    'sat',
+    'sun'
+];
+const numberSuffixes = [
+    'st',
+    'nd',
+    'rd',
+    'th',
+    'th',
+    'th',
+    'th',
+    'th',
+    'th',
+    'th'
+];
+const addNumberSuffix = num => {
+    if (!num) return `${num}`;
+    if (num < 20 && num > 10) return `${num}th`;
+    return num + numberSuffixes[(num - 1) % 10];
+};
+
+const defaultCustoms = {
+    'clock': '$hour:$minute',
+    '12clock': '$hour12:$minute',
+    'date': '$day/$month/$year',
+    'longDate': '$day $monthName $year',
+    'dateClock': '$day/$month/$year $hour:$minute',
+    'longDateClock': '$day $monthName $year $hour:$minute'
+};
+
 class Renderer {
     constructor (options) {
         this.options = options || {};
@@ -152,6 +202,8 @@ class Renderer {
             <a
                 href={href}
                 title={title}
+                target="_blank"
+                rel="noreferrer"
             >
                 {text}
             </a>
@@ -173,9 +225,20 @@ class Renderer {
     }
 
     project (id) {
+        if (/^\d{6,}$/.test(id)) {
+            return (
+                <a
+                    href={`https://studio.penguinmod.com/#${id}`}
+                >
+                    {`#${id}`}
+                </a>
+            );
+        }
         return (
             <a
-                href={`https://studio.penguinmod.com/#${id}`}
+                href={`https://penguinmod.com/search?q=%23${id}`}
+                target="_blank"
+                rel="noreferrer"
             >
                 {`#${id}`}
             </a>
@@ -186,6 +249,8 @@ class Renderer {
         return (
             <a
                 href={`https://penguinmod.com/profile?user=${name}`}
+                target="_blank"
+                rel="noreferrer"
             >
                 {`@${name}`}
             </a>
@@ -196,11 +261,66 @@ class Renderer {
         return (
             <img
                 src={`https://library.penguinmod.com/files/emojis/${name}.png`}
-                alt={name}
+                alt={`:${name}:`}
                 title={`:${name}:`}
                 className={styles.emoji}
             />
         );
+    }
+
+    timestamp (time, locale, custom) {
+        time = new Date(time);
+        if (!custom) return time.toLocaleString();
+        const timeParts = {
+            year: time.getFullYear(),
+            month: time.getMonth(),
+            date: time.getDate(),
+            day: days[time.getDay()],
+            hour: time.getHours(),
+            minute: time.getMinutes(),
+            second: time.getSeconds(),
+            millisecond: time.getMilliseconds()
+        };
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const date = currentDate.getDate();
+        const hour = currentDate.getHours();
+        const minute = currentDate.getMinutes();
+        const second = currentDate.getSeconds();
+        const millisecond = currentDate.getMilliseconds();
+        const timeVars = {
+            ...timeParts,
+            monthName: monthNames[timeParts.month],
+            shortMonthName: monthNames[timeParts.month].slice(0, 3),
+            month: timeParts.month + 1,
+            hour: timeParts.hour >= 10 ? timeParts.hour : `0${timeParts.hour}`,
+            ampm: timeParts.hour >= 11 ? 'pm' : 'am',
+            hour12: ((12 + (timeParts.hour - 1)) % 12) + 1,
+            dateSuffixed: addNumberSuffix(timeParts.date),
+            hoursTo: timeParts.hour - hour,
+            minutesTo: timeParts.minute - minute,
+            secondsTo: timeParts.second - second,
+            millisecondsTo: timeParts.millisecond - millisecond,
+            daysTo: timeParts.date - date,
+            monthTo: timeParts.month - month,
+            yearsTo: timeParts.year - year,
+            hoursSince: hour - hour,
+            minutesSince: minute - timeParts.minute,
+            secondsSince: second - timeParts.second,
+            millisecondsSince: millisecond - timeParts.millisecond,
+            daysSince: date - timeParts.date,
+            monthsSince: month - timeParts.month,
+            yearsSince: year - timeParts.year
+        };
+        custom = defaultCustoms[custom] ?? custom;
+        
+        for (const [_, variable] of custom.matchAll(/\$(\w+)/g)) {
+            const val = timeVars[variable];
+            console.log(variable, val);
+            custom = custom.replace(/\$\w+/, val);
+        }
+        return custom;
     }
 }
 

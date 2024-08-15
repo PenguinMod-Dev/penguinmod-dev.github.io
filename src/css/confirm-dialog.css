@@ -1,3 +1,5 @@
+@import "../css/colors.css";
+
 .base {
     background-color: hsla(194, 100%, 50%, 0.5);
     position: fixed;
@@ -8,11 +10,14 @@
     align-items: center;
     justify-content: center;
 }
+[theme="dark"] .base {
+    background-color: #333a;
+}
 
 .promptBox {
     width: 540px;
     height: 380px;
-    background-color: white;
+    background: $ui-white;
     border-radius: 8px;
     outline-color: hsla(0, 0%, 100%, 0.25);
     outline-width: 4px;
@@ -20,6 +25,10 @@
     overflow: hidden;
     position: relative;
     color: black;
+}
+[theme="dark"] .promptBox {
+    color: $text-primary;
+    background: $ui-primary;
 }
 
 .header {
@@ -30,6 +39,9 @@
     align-items: center;
     justify-content: center;
     color: white;
+}
+[theme="dark"] .header {
+    background-color: $motion-primary-dark;
 }
 
 .buttonRow {

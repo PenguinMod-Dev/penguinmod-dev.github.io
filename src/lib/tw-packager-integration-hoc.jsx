@@ -23,7 +23,6 @@ const PackagerIntegrationHOC = function (WrappedComponent) {
         handleClickPackager() {
             if (this.props.canOpenPackager) {
                 window.open(`${PACKAGER_URL}/?import_from=${location.origin}`);
-                window.open(`${PACKAGER_URL}/?import_from=${location.origin}`);
             }
         }
         handleMessage(e) {

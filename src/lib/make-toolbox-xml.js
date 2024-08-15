@@ -429,6 +429,11 @@ const looks = function (isInitialSetup, isStage, targetId, costumeName, backdrop
                     </shadow>
                 </value>
             </block>
+            <block type="looks_goTargetLayer">
+                <value name="VISIBLE_OPTION">
+                    <shadow type="looks_getOtherSpriteVisible_menu"/>
+                </value>
+            </block>
             <block type="looks_layersGetLayer"></block>
             ${blockSeparator}
         `}
@@ -636,6 +641,7 @@ const control = function (isInitialSetup, isStage) {
         </block>
         <block id="forever" type="control_forever"/>
         <block type="control_exitLoop"/>
+        <block type="control_continueLoop"/>
         ${blockSeparator}
         <block type="control_switch"/>
         <block type="control_switch_default"/>
@@ -682,6 +688,21 @@ const control = function (isInitialSetup, isStage) {
         </block>
         ${blockSeparator}
         <block type="control_all_at_once"/>
+        <block type="control_run_as_sprite">
+            <value name="RUN_AS_OPTION">
+                <shadow type="control_run_as_sprite_menu"/>
+            </value>
+        </block>
+        ${blockSeparator}
+        <block type="control_try_catch"/>
+        <block type="control_throw_error">
+            <value name="ERROR">
+                <shadow type="text">
+                    <field name="TEXT">Hello!</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="control_error"/>
         ${blockSeparator}
         <block type="control_backToGreenFlag"></block>
         <block type="control_stop_sprite">
@@ -690,12 +711,6 @@ const control = function (isInitialSetup, isStage) {
             </value>
         </block>
         <block type="control_stop"/>
-        ${blockSeparator}
-        <block type="control_run_as_sprite">
-            <value name="RUN_AS_OPTION">
-                <shadow type="control_run_as_sprite_menu"/>
-            </value>
-        </block>
         ${blockSeparator}
         ${isStage ? `
             <block type="control_create_clone_of">
@@ -730,6 +745,8 @@ const control = function (isInitialSetup, isStage) {
 
 const sensing = function (isInitialSetup, isStage) {
     const name = translate('SENSING_ASK_TEXT', 'What\'s your name?');
+    // const openDocumentation = translate('OPEN_DOCUMENTATION', 'Open Documentation');
+    const helpManual = translate('HELP_MANUAL', 'Help Manual');
     return `
     <category name="%{BKY_CATEGORY_SENSING}" id="sensing" colour="#4CBFE6" secondaryColour="#2E8EB8">
         ${isStage ? '' : `
@@ -878,6 +895,7 @@ const sensing = function (isInitialSetup, isStage) {
         `}
         ${blockSeparator}
         <block id="loudness" type="sensing_loudness"/>
+        <block id="loud" type="sensing_loud"/>
         ${blockSeparator}
         <block type="sensing_resettimer"/>
         <block id="timer" type="sensing_timer"/>
@@ -923,7 +941,9 @@ const sensing = function (isInitialSetup, isStage) {
             </value>
         </block>
         ${blockSeparator}
+        <button text="${helpManual}" callbackKey="OPEN_USERNAME_DOCS" />
         <block type="sensing_username"/>
+        <block type="sensing_loggedin"/>
         ${categorySeparator}
     </category>
     `;
@@ -1414,6 +1434,15 @@ const liveTests = function () {
         <block type="control_fieldbutton"></block>
         <block type="operators_expandablejoininputs"></block>
         <block type="motion_mutatorCheckboxTest"></block>
+        ${blockSeparator}
+        <block type="data_filterlist">
+            <value name="INDEX">
+                <shadow type="data_filterlistindex"></shadow>
+            </value>
+            <value name="ITEM">
+                <shadow type="data_filterlistitem"></shadow>
+            </value>
+        </block>
     </category>
     `;
 };
@@ -1472,25 +1501,25 @@ const makeToolboxXML = function (isInitialSetup, isStage = true, targetId, categ
 
     const everything = [
         xmlOpen,
-        motionXML, gap,
-        looksXML, gap,
-        soundXML, gap,
-        eventsXML, gap,
-        controlXML, gap,
-        sensingXML, gap,
-        operatorsXML, gap,
-        variablesXML, gap,
-        listsXML, gap,
-        myBlocksXML, gap,
-        isLiveTest ? [liveTestsXML, gap] : ''
+        motionXML,
+        looksXML,
+        soundXML,
+        eventsXML,
+        controlXML,
+        sensingXML,
+        operatorsXML,
+        variablesXML,
+        listsXML,
+        myBlocksXML
     ];
+    if (isLiveTest) everything.push(liveTestsXML);
 
     for (const extensionCategory of categoriesXML) {
-        everything.push(gap, extensionCategory.xml);
+        everything.push(extensionCategory.xml);
     }
 
     everything.push(xmlClose);
-    return everything.join('\n');
+    return everything.join(`\n${gap}\n`);
 };
 
 export default makeToolboxXML;

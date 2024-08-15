@@ -2,8 +2,8 @@ import bindAll from 'lodash.bindall';
 import PropTypes from 'prop-types';
 import React from 'react';
 import VM from 'scratch-vm';
-import {connect} from 'react-redux';
-import {encodeAndAddSoundToVM} from '../lib/audio/audio-util.js';
+import { connect } from 'react-redux';
+import { encodeAndAddSoundToVM } from '../lib/audio/audio-util.js';
 
 import RecordModalComponent from '../components/record-modal/record-modal.jsx';
 

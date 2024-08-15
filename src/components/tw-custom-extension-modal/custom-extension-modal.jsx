@@ -6,6 +6,7 @@ import Modal from '../../containers/modal.jsx';
 import FileInput from './file-input.jsx';
 import styles from './custom-extension-modal.css';
 import FancyCheckbox from '../tw-fancy-checkbox/checkbox.jsx';
+import MonacoEditor from 'react-monaco-editor';
 import {APP_NAME} from '../../lib/brand';
 
 const messages = defineMessages({
@@ -115,13 +116,12 @@ const CustomExtensionModal = props => (
                             id="tw.customExtensionModal.promptText"
                         />
                     </p>
-                    <textarea
+                    <MonacoEditor
                         className={styles.textCodeInput}
-                        placeholder={'class Extension {\n  // ...\n}\nScratch.extensions.register(new Extension());'}
+                        language="javascript"
+                        theme={`vs-${localStorage.get('tw:theme')}`}
                         value={props.text}
                         onChange={props.onChangeText}
-                        autoFocus
-                        spellCheck={false}
                     />
                 </React.Fragment>
             )}

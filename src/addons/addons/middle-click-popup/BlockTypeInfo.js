@@ -405,14 +405,19 @@ export class BlockTypeInfo {
         addInput(new BlockInputEnum(options, inputIdx, fieldIdx, fieldIdx === -1));
       } else if (field instanceof Blockly.FieldImage) {
         switch (field.src_) {
-          case "/static/blocks-media/green-flag.svg":
-            parts.push(locale("/_general/blocks/green-flag"));
+          case "static/blocks-media/green-flag.svg":
+          case "static/blocks-media/blue-flag.svg":
+            parts.push("flag");
             break;
-          case "/static/blocks-media/rotate-right.svg":
-            parts.push(locale("/_general/blocks/clockwise"));
+          case "static/blocks-media//icons/control_stop.svg":
+          case "static/blocks-media/icons/control_stop.svg":
+            parts.push("stop");
             break;
-          case "/static/blocks-media/rotate-left.svg":
-            parts.push(locale("/_general/blocks/anticlockwise"));
+          case "static/blocks-media/rotate-right.svg":
+            parts.push("clockwise");
+            break;
+          case "static/blocks-media/rotate-left.svg":
+            parts.push("anti-clockwise");
             break;
         }
       } else {

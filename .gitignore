@@ -14,7 +14,10 @@ npm-*
 !build/
 !dist/
 build/*
+yarn.lock
 
 # Generated translation files
 /translations
 /locale
+src/lib/tw-translations/new-generated-translations.json
+src/lib/tw-translations/merged-translations.json

@@ -34,10 +34,11 @@ const messages = defineMessages({
 // Only trust loading extension links from these origins.
 // For user-made libraries.
 const TRUSTED_LOADEXT_ORIGINS = [
-    'https://studio.penguinmod.site', // for development
     'https://studio.penguinmod.com', // for development
     'https://extensions.penguinmod.com',
     'https://sharkpools-extensions.vercel.app',
+    'https://raw.githubusercontent.com/SharkPool-SP/SharkPools-Extensions/main', // Some people cant connect to vercel
+    'https://pen-group.github.io',
 ];
 
 class ExtensionLibrary extends React.PureComponent {
@@ -100,7 +101,6 @@ class ExtensionLibrary extends React.PureComponent {
             }, e.origin);
             return;
         }
-
         // load the extension like any other custom extension url (this means sandboxing for some urls)
         if (this.props.vm.extensionManager.isExtensionLoaded(extensionId)) {
             this.props.onCategorySelected(extensionId);
@@ -157,7 +157,7 @@ class ExtensionLibrary extends React.PureComponent {
             window.open('https://extensions.penguinmod.com/');
             return;
         }
-        const url = item.extensionURL ? item.extensionURL : extensionId;
+        const url = (item.extensionURL ? item.extensionURL : extensionId);
         if (item._unsandboxed && url.startsWith("data:")) {
             manuallyTrustExtension(url);
         }

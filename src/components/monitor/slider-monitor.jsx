@@ -14,7 +14,7 @@ const SliderMonitor = ({categoryColor, isDiscrete, label, min, max, value, onSli
                 className={styles.value}
                 style={{background: categoryColor}}
             >
-                {value}
+                {Number(value)}
             </div>
         </div>
         <div className={styles.row}>
@@ -24,7 +24,7 @@ const SliderMonitor = ({categoryColor, isDiscrete, label, min, max, value, onSli
                 min={min}
                 step={isDiscrete ? 1 : 0.01}
                 type="range"
-                value={value}
+                value={Number(value)}
                 onChange={onSliderUpdate}
             />
         </div>

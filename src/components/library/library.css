@@ -26,14 +26,33 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-left: 6px;
 }
-.libraryItemCount {
+.library-item-count {
     opacity: 0.5;
     margin-block: 0;
     margin-left: 4px;
 }
 [theme="dark"] .library-header {
     color: white;
+}
+[dir="rtl"] .library-header {
+    margin-left: initial;
+    margin-right: 6px;
+}
+[dir="rtl"] .library-item-count {
+    margin-left: initial;
+    margin-right: 4px;
+}
+
+.library-tag-count {
+    margin-right: 2.5%;
+    text-align: right;
+}
+[dir="rtl"] .library-tag-count {
+    margin-right: initial;
+    margin-left: 2.5%;
+    text-align: left;
 }
 
 .library-scroll-grid {

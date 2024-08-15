@@ -104,7 +104,7 @@ const SBFileUploaderHOC = function (WrappedComponent) {
             } else {
                 // create <input> element and add it to DOM
                 this.inputElement = document.createElement('input');
-                this.inputElement.accept = '.sb,.sb2,.sb3,.pm,.pmp';
+                this.inputElement.accept = '.pmp,.sb,.sb2,.sb3,.pm';
                 this.inputElement.style = 'display: none;';
                 this.inputElement.type = 'file';
                 this.inputElement.onchange = this.handleChange; // connects to step 3

@@ -15,6 +15,7 @@ var defaultsdeep = require('lodash.defaultsdeep');
 var autoprefixer = require('autoprefixer');
 var postcssVars = require('postcss-simple-vars');
 var postcssImport = require('postcss-import');
+const MonacoEditorWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const STATIC_PATH = process.env.STATIC_PATH || '/static';
 
@@ -72,7 +73,8 @@ const base = {
                 path.resolve(__dirname, 'src'),
                 /node_modules[\\/]scratch-[^\\/]+[\\/]src/,
                 /node_modules[\\/]pify/,
-                /node_modules[\\/]@vernier[\\/]godirect/
+                /node_modules[\\/]@vernier[\\/]godirect/,
+                /node_modules[\\/]monaco-editor[\\/]esm[\\/]vs[\\/]language/
             ],
             options: {
                 // Explicitly disable babelrc so we don't catch various config
@@ -112,8 +114,7 @@ const base = {
             }]
         }]
     },
-    plugins: [
-    ],
+    plugins: [new MonacoEditorWebpackPlugin()]
 };
 
 if (!process.env.CI) {
@@ -167,14 +168,14 @@ module.exports = [
                 chunks: ['editor'],
                 template: 'src/playground/index.ejs',
                 filename: 'editor.html',
-                title: 'PenguinMod - A mod of TurboWarp',
+                title: 'PenguinMod - Editor',
                 ...htmlWebpackPluginCommon
             }),
             new HtmlWebpackPlugin({
                 chunks: ['playground'],
                 template: 'src/playground/index.ejs',
                 filename: 'playground.html',
-                title: 'PenguinMod - A mod of TurboWarp',
+                title: 'PenguinMod - Playground',
                 ...htmlWebpackPluginCommon
             }),
             new HtmlWebpackPlugin({

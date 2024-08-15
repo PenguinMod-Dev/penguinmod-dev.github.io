@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import bindAll from 'lodash.bindall';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import log from '../lib/log';
 import localforage from 'localforage';
 import CustomExtensionModalComponent from '../components/tw-custom-extension-modal/custom-extension-modal.jsx';
-import { closeCustomExtensionModal } from '../reducers/modals';
-import { manuallyTrustExtension, isTrustedExtension } from './tw-security-manager.jsx';
+import {closeCustomExtensionModal} from '../reducers/modals';
+import {manuallyTrustExtension, isTrustedExtension} from './tw-security-manager.jsx';
 
 const generateRandomId = () => {
     const randomChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -17,7 +17,7 @@ const generateRandomId = () => {
 };
 
 class CustomExtensionModal extends React.Component {
-    constructor(props) {
+    constructor (props) {
         super(props);
         bindAll(this, [
             'handleChangeFile',
@@ -39,10 +39,10 @@ class CustomExtensionModal extends React.Component {
         ]);
         this.state = {
             files: null,
-            type: 'url',
-            url: '',
+            type: this.props.swapId ? 'text' : 'url',
+            url: this.fetchSwapUrl(),
             file: null,
-            text: '',
+            text: this.fetchSwapText(),
             unsandboxed: false,
             addingToLibrary: false,
             libraryImageFile: null,
@@ -57,7 +57,7 @@ class CustomExtensionModal extends React.Component {
             }
         };
     }
-    getExtensionURL() {
+    getExtensionURL () {
         if (this.state.type === 'url') {
             return this.state.url;
         }
@@ -74,7 +74,7 @@ class CustomExtensionModal extends React.Component {
         }
         return Promise.reject(new Error('Unknown type'));
     }
-    hasValidInput() {
+    hasValidInput () {
         if (this.state.type === 'url') {
             try {
                 const parsed = new URL(this.state.url);
@@ -95,44 +95,75 @@ class CustomExtensionModal extends React.Component {
         }
         return false;
     }
-    handleChangeFile(file) {
+    handleChangeFile (file) {
         this.setState({
             file
         });
     }
-    handleChangeURL(e) {
+    handleChangeURL (e) {
         this.setState({
             url: e.target.value
         });
     }
-    handleClose() {
+    handleClose () {
         this.props.onClose();
     }
-    handleKeyDown(e) {
+    handleKeyDown (e) {
         if (e.key === 'Enter' && this.hasValidInput()) {
             e.preventDefault();
             this.handleLoadExtension();
         }
     }
-    async handleLoadExtension() {
+    async handleLoadExtension () {
         let failed = false;
+        if (this.props.swapId) {
+            /* eslint-disable-next-line no-alert, max-len */
+            if (!confirm('Failure to swap extensions will cause the extension to be flatout removed, are you sure the inputed extension has matching id\'s and has no errors?')) {
+                return;
+            }
+        }
         this.handleClose();
         try {
             const url = await this.getExtensionURL();
             if (this.state.type !== 'url' && this.state.unsandboxed) {
                 manuallyTrustExtension(url);
             }
-            await this.props.vm.extensionManager.loadExtensionURL(url);
+            if (this.props.swapId) {
+                const runtime = this.props.vm.runtime;
+                this.props.vm.extensionManager.prepareSwap(this.props.swapId);
+                let extIdx = runtime._blockInfo.findIndex(ext => ext.id === this.props.swapId);
+                const loadedIds = await this.props.vm.extensionManager.loadExtensionURL(url);
+                if (!loadedIds.includes(this.props.swapId)) {
+                    for (const ext of loadedIds) this.props.vm.extensionManager.removeExtension(ext);
+                    // eslint-disable-next-line no-alert
+                    alert('The extension you used to for the edit had a different id to the one you where editing.');
+                }
+                this.props.vm.runtime._removeExtensionPrimitive(this.props.swapId);
+                loadedIds.forEach(extId => {
+                    const idx = runtime._blockInfo.findLastIndex(ext => ext.id === extId);
+                    const ext = runtime._blockInfo[idx];
+                    runtime._blockInfo.splice(idx, 1);
+                    runtime._blockInfo.splice(extIdx, 0, ext);
+                    extIdx++;
+                });
+            } else {
+                await this.props.vm.extensionManager.loadExtensionURL(url);
+            }
         } catch (err) {
             failed = true;
             log.error(err);
             // eslint-disable-next-line no-alert
             alert(err);
         } finally {
+            if (failed && this.props.swapId) {
+                // eslint-disable-next-line no-alert
+                alert('The extension you used to for the edit has failed to load.');
+                this.props.vm.runtime._removeExtensionPrimitive(this.props.swapId);
+            }
             if (failed) return;
             if (!this.state.addingToLibrary) return;
             // we are only adding to library if it succeeded to load
-            const id = "pm:favorited_extensions";
+            const id = 'pm:favorited_extensions';
             const libraryItem = this.state.libraryItem;
             const url = await this.getExtensionURL();
             const favorites = await localforage.getItem(id);
@@ -148,36 +179,36 @@ class CustomExtensionModal extends React.Component {
             return;
         }
     }
-    handleSwitchToFile() {
+    handleSwitchToFile () {
         this.setState({
             type: 'file'
         });
     }
-    handleSwitchToURL() {
+    handleSwitchToURL () {
         this.setState({
             type: 'url'
         });
     }
-    handleSwitchToText() {
+    handleSwitchToText () {
         this.setState({
             type: 'text'
         });
     }
-    handleChangeText(e) {
+    handleChangeText (e) {
         this.setState({
             text: e.target.value
         });
     }
-    handleDragOver(e) {
+    handleDragOver (e) {
         if (e.dataTransfer.types.includes('Files')) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'copy';
         }
     }
-    handleDragLeave() {
+    handleDragLeave () {
 
     }
-    handleDrop(e) {
+    handleDrop (e) {
         const file = e.dataTransfer.files[0];
         if (file) {
             e.preventDefault();
@@ -187,33 +218,33 @@ class CustomExtensionModal extends React.Component {
             });
         }
     }
-    isUnsandboxed() {
+    isUnsandboxed () {
         if (this.state.type === 'url') {
             return isTrustedExtension(this.state.url);
         }
         return this.state.unsandboxed;
     }
-    canChangeUnsandboxed() {
+    canChangeUnsandboxed () {
         return this.state.type !== 'url';
     }
-    handleChangeUnsandboxed(e) {
+    handleChangeUnsandboxed (e) {
         this.setState({
             unsandboxed: e.target.checked
         });
     }
-    handleChangeAddToLibrary(e) {
+    handleChangeAddToLibrary (e) {
         this.setState({
             addingToLibrary: e.target.checked
         });
     }
-    async handleLoadingDataUrl(file) {
+    async handleLoadingDataUrl (file) {
         const fr = new FileReader();
-        fr.onerror = () => {
-            return alert("Failed to load the image!");
-        }
+        // eslint-disable-next-line no-alert
+        fr.onerror = () => alert('Failed to load the image!');
         fr.onload = () => {
             if (!file.type.startsWith('image/')) {
-                return alert("This is not an image!");
+                // eslint-disable-next-line no-alert
+                return alert('This is not an image!');
             }
             const url = fr.result;
             const libraryItem = this.state.libraryItem;
@@ -230,13 +261,13 @@ class CustomExtensionModal extends React.Component {
         };
         fr.readAsDataURL(file);
     }
-    handleChangeLibraryItem(key, e) {
+    handleChangeLibraryItem (key, e) {
         const newData = {};
-        if (key === "rawURL") {
+        if (key === 'rawURL') {
             this.handleLoadingDataUrl(e);
             return;
         }
-        let value = e.target.value;
+        const value = e.target.value;
         newData[key] = value;
         const libraryItem = this.state.libraryItem;
         this.setState({
@@ -246,9 +277,17 @@ class CustomExtensionModal extends React.Component {
             }
         });
     }
-    render() {
+    fetchSwapUrl () {
+        return this.props.vm.extensionManager.extensionUrlFromId(this.props.swapId) ?? '';
+    }
+    fetchSwapText () {
+        return this.props.vm.extensionManager.extUrlCodes[this.fetchSwapUrl()] ?? 'class Extension {\n  // ...\n}\nScratch.extensions.register(new Extension());';
+    }
+    render () {
         return (
             <CustomExtensionModalComponent
+                defaultUrl={this.fetchSwapUrl()}
+                defaultText={this.fetchSwapText()}
                 canLoadExtension={this.hasValidInput()}
                 type={this.state.type}
                 onSwitchToFile={this.handleSwitchToFile}
@@ -275,7 +314,6 @@ class CustomExtensionModal extends React.Component {
                 libraryItemDescription={this.state.libraryItem.description}
                 libraryItemImage={this.state.libraryItem.rawURL}
                 libraryItemFile={this.state.libraryImageFile}
-
                 onChangeLibraryItem={this.handleChangeLibraryItem}
             />
         );
@@ -286,13 +324,24 @@ CustomExtensionModal.propTypes = {
     onClose: PropTypes.func,
     vm: PropTypes.shape({
         extensionManager: PropTypes.shape({
-            loadExtensionURL: PropTypes.func
+            loadExtensionURL: PropTypes.func,
+            getExtensionURLs: PropTypes.func,
+            extUrlCodes: PropTypes.object,
+            prepareSwap: PropTypes.func,
+            extensionUrlFromId: PropTypes.func,
+            removeExtension: PropTypes.func
+        }),
+        runtime: PropTypes.shape({
+            _removeExtensionPrimitive: PropTypes.func,
+            _blockInfo: PropTypes.array
         })
-    })
+    }),
+    swapId: PropTypes.string
 };
 
 const mapStateToProps = state => ({
-    vm: state.scratchGui.vm
+    vm: state.scratchGui.vm,
+    swapId: state.scratchGui.modals.extensionModalSwapId
 });
 
 const mapDispatchToProps = dispatch => ({

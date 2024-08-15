@@ -167,8 +167,8 @@ export default defineMessages({
         id: 'gui.libraryTags.categoryexpansion'
     },
     ui: {
-        defaultMessage: 'UI',
-        description: 'Tag for filtering a library by ui',
+        defaultMessage: 'Menu',
+        description: 'Tag for filtering a library by UI/Menu',
         id: 'gui.libraryTags.ui'
     },
     footsteps: {
@@ -205,5 +205,25 @@ export default defineMessages({
         defaultMessage: 'Data Management',
         description: 'Tag for filtering a library by data management',
         id: 'gui.libraryTags.datamgmt'
+    },
+    graphics: {
+        defaultMessage: 'Graphics',
+        description: 'Tag for filtering a library by graphics.',
+        id: 'gui.libraryTags.graphics'
+    },
+    noisemaker: {
+        defaultMessage: 'Sound',
+        description: 'Tag for filtering a library by their relation to sound.',
+        id: 'gui.libraryTags.noisemaker'
+    },
+    metal: {
+        defaultMessage: 'Metal',
+        description: 'Tag for filtering a library by metal sounds.',
+        id: 'gui.libraryTags.metal'
+    },
+    monsters: {
+        defaultMessage: 'Monsters',
+        description: 'Tag for filtering a library by monster sounds.',
+        id: 'gui.libraryTags.monster'
     },
 });

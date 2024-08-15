@@ -270,6 +270,7 @@ export default function (vm) {
                 [ScratchBlocks.Msg.SENSING_OF_DIRECTION, 'direction'],
                 [ScratchBlocks.Msg.SENSING_OF_COSTUMENUMBER, 'costume #'],
                 [ScratchBlocks.Msg.SENSING_OF_COSTUMENAME, 'costume name'],
+                ['layer', 'layer'],
                 [ScratchBlocks.Msg.SENSING_OF_SIZE, 'size'],
                 [ScratchBlocks.Msg.SENSING_OF_VOLUME, 'volume']
             ];
@@ -514,10 +515,9 @@ export default function (vm) {
         {
             text: 'Remove Extension',
             enabled: true,
-            callback: ext => {
-                vm.extensionManager.removeExtension(ext);
-            }
+            callback: ext => vm.extensionManager.removeExtension(ext)
         }
+        // see src/components/blocks.jsx (just after `VMScratchBlocks(props.vm)`) for Edit Extension
     ]);
 
     return ScratchBlocks;

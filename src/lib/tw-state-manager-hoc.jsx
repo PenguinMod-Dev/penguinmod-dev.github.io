@@ -318,7 +318,7 @@ const TWStateManager = function (WrappedComponent) {
                 this.props.vm.setInterpolation(true);
             }
 
-            if (urlParams.has('username')) {
+            if (urlParams.has('username') && !this.props.usernameLoggedIn) {
                 const username = urlParams.get('username');
                 // Do not save username when loaded from URL
                 this.doNotPersistUsername = username;
@@ -610,6 +610,7 @@ const TWStateManager = function (WrappedComponent) {
         framerate: PropTypes.number,
         interpolation: PropTypes.bool,
         turbo: PropTypes.bool,
+        usernameLoggedIn: PropTypes.bool,
         onSetIsFullScreen: PropTypes.func,
         onSetIsPlayerOnly: PropTypes.func,
         onSetProjectId: PropTypes.func,
@@ -620,6 +621,7 @@ const TWStateManager = function (WrappedComponent) {
         vm: PropTypes.instanceOf(VM)
     };
     StateManagerComponent.defaultProps = {
+        usernameLoggedIn: false,
         routingStyle: process.env.ROUTING_STYLE
     };
     const mapStateToProps = state => ({
@@ -630,6 +632,7 @@ const TWStateManager = function (WrappedComponent) {
         projectChanged: state.scratchGui.projectChanged,
         reduxProjectId: state.scratchGui.projectState.projectId,
         compilerOptions: state.scratchGui.tw.compilerOptions,
+        usernameLoggedIn: state.scratchGui.tw.usernameLoggedIn,
         runtimeOptions: state.scratchGui.tw.runtimeOptions,
         highQualityPen: state.scratchGui.tw.highQualityPen,
         framerate: state.scratchGui.tw.framerate,

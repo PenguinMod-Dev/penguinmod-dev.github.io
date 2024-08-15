@@ -67,8 +67,7 @@ const addons = [
     'tw-straighten-comments',
     'tw-remove-backpack',
     'tw-remove-feedback',
-    'tw-disable-cloud-variables',
-    'editor-stepping'
+    'tw-disable-cloud-variables'
 ];
 
 const newAddons = [
@@ -76,7 +75,8 @@ const newAddons = [
     'number-pad',
     'rename-broadcasts',
     'sprite-properties',
-    'paint-snap'
+    'paint-snap',
+    "editor-block-chomping",
 ];
 
 // eslint-disable-next-line import/no-commonjs

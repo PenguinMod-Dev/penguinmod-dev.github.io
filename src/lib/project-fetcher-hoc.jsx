@@ -136,7 +136,7 @@ const ProjectFetcherHOC = function (WrappedComponent) {
                     storage.setProjectToken(projectId);
                     assetPromise = storage.load(storage.AssetType.Project, projectId, storage.DataFormat.JSON);
                 } else {
-                    projectUrl = `https://projects.penguinmod.com/api/projects/getPublished?type=file&id=${projectId}`
+                    projectUrl = `https://projects.penguinmod.com/api/projects/getPublished?type=file&safe=true&id=${projectId}`
                     assetPromise = progressMonitor.fetchWithProgress(projectUrl)
                         .then(r => {
                             this.props.vm.runtime.renderer.setPrivateSkinAccess(false);

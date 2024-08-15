@@ -118,6 +118,9 @@
 .custom-stage-size-button[data-widescreen="true"] {
     width: 224px;
 }
+.custom-stage-size-button[data-square="true"] {
+    width: 126px;
+}
 .custom-stage-size-button[data-selected="true"] {
     border-color: $motion-primary;
 }
@@ -167,8 +170,20 @@
     padding: 0.5rem 1rem;
     margin: 0.25rem 0;
     border-radius: 4px;
-    background: rgb(233, 233, 53);
+    background: rgb(255, 197, 38);
+    color: black;
 }
 [theme="dark"] .warning {
-    background: rgb(114, 102, 0);
+    background: rgb(114, 65, 0);
+    color: $text-primary;
+}
+
+.summary {
+    cursor: pointer;
+}
+.dropdown {
+    margin-right: 4px;
+}
+details[open] .dropdown {
+    transform: rotate(90deg);
 }

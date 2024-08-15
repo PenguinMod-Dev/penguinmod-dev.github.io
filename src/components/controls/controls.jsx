@@ -56,7 +56,7 @@ const Controls = function (props) {
             />
             <PauseButton
                 paused={paused}
-                title={intl.formatMessage(messages.goTitle)}
+                title={intl.formatMessage(messages.pauseTitle)}
                 onClick={onPauseButtonClick}
             />
             <StopAll

@@ -4,6 +4,7 @@ import React from 'react';
 import Box from '../box/box.jsx';
 import Modal from '../../containers/modal.jsx';
 import classNames from 'classnames';
+import {APP_NAME} from '../../lib/brand';
 
 import styles from './username-modal.css';
 import isScratchDesktop from '../../lib/isScratchDesktop.js';
@@ -24,7 +25,7 @@ const UsernameModalComponent = props => (
         id="usernameModal"
     >
         <Box className={styles.body}>
-            {props.mustChangeUsername && <React.Fragment>
+            {props.mustChangeUsername && !props.usernameLoggedIn && <React.Fragment>
                 <p className={classNames(styles.helpText, styles.mustChange)}>
                     <FormattedMessage
                         // eslint-disable-next-line max-len
@@ -65,12 +66,31 @@ const UsernameModalComponent = props => (
                     onChange={props.onChange}
                     onFocus={props.onFocus}
                     onKeyPress={props.onKeyPress}
-                    pattern="^[a-zA-Z0-9_-]*$"
+                    pattern="^[a-zA-Z0-9_\-]*$"
                     maxLength="20"
                     spellCheck="false"
+                    disabled={props.usernameLoggedIn}
                 />
             </Box>
-            {isScratchDesktop() ? (
+            {!props.usernameLoggedIn ? (
+                null
+            ) : (
+                <React.Fragment>
+                    <p className={styles.helpText}>
+                        <FormattedMessage
+                            // eslint-disable-next-line max-len
+                            defaultMessage="You are currently logged in as {USERNAME}. You cannot change your username unless you log out of {APP_NAME}."
+                            description="Text when the user is logged in, so they cant change their username"
+                            id="pm.usernameModal.loggedIn"
+                            values={{
+                                USERNAME: props.value,
+                                APP_NAME
+                            }}
+                        />
+                    </p>
+                </React.Fragment>
+            )}
+            {isScratchDesktop() || props.usernameLoggedIn ? (
                 null
             ) : (
                 <React.Fragment>
@@ -96,6 +116,7 @@ const UsernameModalComponent = props => (
                 <button
                     className={styles.cancelButton}
                     onClick={props.onReset}
+                    disabled={props.usernameLoggedIn}
                 >
                     <FormattedMessage
                         defaultMessage="Reset"
@@ -116,7 +137,7 @@ const UsernameModalComponent = props => (
                 <button
                     className={styles.okButton}
                     onClick={props.onOk}
-                    disabled={!props.valueValid}
+                    disabled={!props.valueValid || props.usernameLoggedIn}
                 >
                     <FormattedMessage
                         defaultMessage="OK"
@@ -134,6 +155,7 @@ UsernameModalComponent.propTypes = {
     mustChangeUsername: PropTypes.bool.isRequired,
     value: PropTypes.string.isRequired,
     valueValid: PropTypes.bool.isRequired,
+    usernameLoggedIn: PropTypes.bool.isRequired,
     onCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     onFocus: PropTypes.func.isRequired,

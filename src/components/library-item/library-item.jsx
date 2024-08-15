@@ -25,6 +25,9 @@ const getURLOrigin = (url) => {
     }
     return urlObj.origin;
 };
+const getMSFormatted = (ms) => {
+    return (ms / 1000).toFixed(2);
+};
 
 /* eslint-disable react/prefer-stateless-function */
 class LibraryItemComponent extends React.PureComponent {
@@ -308,7 +311,9 @@ class LibraryItemComponent extends React.PureComponent {
             <Box
                 className={classNames(
                     styles.libraryItem, {
-                    [styles.hidden]: this.props.hidden
+                    [styles.hidden]: this.props.hidden,
+                    [styles.libraryItemSound]: this.props.styleForSound,
+                    [styles.libraryItemNew]: this.props.isNew,
                 }
                 )}
                 role="button"
@@ -320,6 +325,11 @@ class LibraryItemComponent extends React.PureComponent {
                 onMouseEnter={this.props.showPlayButton ? null : this.props.onMouseEnter}
                 onMouseLeave={this.props.showPlayButton ? null : this.props.onMouseLeave}
             >
+                {this.props.isNew && (
+                    <div className={styles.libraryItemNewBadge}>
+                        NEW
+                    </div>
+                )}
                 {/* Layers of wrapping is to prevent layout thrashing on animation */}
                 <Box className={styles.libraryItemImageContainerWrapper}>
                     <Box
@@ -328,16 +338,45 @@ class LibraryItemComponent extends React.PureComponent {
                         onMouseLeave={this.props.showPlayButton ? this.props.onMouseLeave : null}
                     >
                         <img
-                            className={styles.libraryItemImage}
+                            className={classNames(
+                                styles.libraryItemImage, {
+                                [styles.libraryItemWaveform]: this.props.styleForSound
+                            }
+                            )}
                             loading="lazy"
                             src={this.props.iconURL}
                             draggable={false}
                         />
+                        {this.props.overlayURL && (
+                            <img
+                                className={classNames(
+                                    styles.libraryItemImage, styles.libraryItemImageOverlay, {
+                                    [styles.libraryItemWaveform]: this.props.styleForSound
+                                }
+                                )}
+                                loading="lazy"
+                                src={this.props.overlayURL}
+                                draggable={false}
+                            />
+                        )}
                     </Box>
                 </Box>
-                <span className={styles.libraryItemName}>{this.props.name}</span>
+                {this.props.styleForSound ? (
+                    <div className={styles.libraryItemSoundInfoContainer}>
+                        <span className={classNames(styles.libraryItemName, styles.libraryItemSoundName)}>{this.props.name}</span>
+                        <span className={classNames(styles.libraryItemName, styles.libraryItemSoundType)}>
+                            {this.props.soundType}, {getMSFormatted(this.props.soundLength)}
+                        </span>
+                    </div>
+                ) : (
+                    <span className={styles.libraryItemName}>{this.props.name}</span>
+                )}
                 {this.props.showPlayButton ? (
                     <PlayButton
+                        className={classNames({
+                            [styles.libraryItemSoundPlayButton]: this.props.styleForSound,
+                            [styles.libraryItemNewPlayButton]: this.props.isNew,
+                        })}
                         isPlaying={this.props.isPlaying}
                         onPlay={this.props.onPlay}
                         onStop={this.props.onStop}
@@ -365,9 +404,14 @@ LibraryItemComponent.propTypes = {
     disabled: PropTypes.bool,
     extensionId: PropTypes.string,
     featured: PropTypes.bool,
+    isNew: PropTypes.bool,
     hidden: PropTypes.bool,
     iconURL: PropTypes.string,
+    overlayURL: PropTypes.string,
     insetIconURL: PropTypes.string,
+    styleForSound: PropTypes.bool,
+    soundType: PropTypes.string,
+    soundLength: PropTypes.number,
     customInsetColor: PropTypes.string,
     internetConnectionRequired: PropTypes.bool,
     isPlaying: PropTypes.bool,

@@ -16,6 +16,7 @@ import {
     BLOCKS_TAB_INDEX,
     COSTUMES_TAB_INDEX,
     SOUNDS_TAB_INDEX,
+    VARIABLES_TAB_INDEX,
     FILES_TAB_INDEX
 } from '../reducers/editor-tab';
 
@@ -40,6 +41,7 @@ import cloudManagerHOC from '../lib/cloud-manager-hoc.jsx';
 import TWFullScreenResizerHOC from '../lib/tw-fullscreen-resizer-hoc.jsx';
 
 import GUIComponent from '../components/gui/gui.jsx';
+import HomeCommunication from './home-communication.jsx';
 import {setIsScratchDesktop} from '../lib/isScratchDesktop.js';
 
 class GUI extends React.Component {
@@ -85,7 +87,7 @@ class GUI extends React.Component {
             isPlayground,
             ...componentProps
         } = this.props;
-        return (
+        return (<>
             <GUIComponent
                 loading={fetchingProject || isLoading || loadingStateVisible}
                 isPlayground={isPlayground}
@@ -93,7 +95,12 @@ class GUI extends React.Component {
             >
                 {children}
             </GUIComponent>
-        );
+            
+            <HomeCommunication
+                projectId={projectId}
+                isPlayground={isPlayground}
+            />
+        </>);
     }
 }
 
@@ -153,6 +160,7 @@ const mapStateToProps = state => {
         loadingStateVisible: state.scratchGui.modals.loadingProject,
         projectId: state.scratchGui.projectState.projectId,
         soundsTabVisible: state.scratchGui.editorTab.activeTabIndex === SOUNDS_TAB_INDEX,
+        variablesTabVisible: state.scratchGui.editorTab.activeTabIndex === VARIABLES_TAB_INDEX,
         filesTabVisible: state.scratchGui.editorTab.activeTabIndex === FILES_TAB_INDEX,
         targetIsStage: (
             state.scratchGui.targets.stage &&
@@ -173,6 +181,7 @@ const mapDispatchToProps = dispatch => ({
     onActivateTab: tab => dispatch(activateTab(tab)),
     onActivateCostumesTab: () => dispatch(activateTab(COSTUMES_TAB_INDEX)),
     onActivateSoundsTab: () => dispatch(activateTab(SOUNDS_TAB_INDEX)),
+    onActivateVariablesTab: () => dispatch(activateTab(VARIABLES_TAB_INDEX)),
     onActivateFilesTab: () => dispatch(activateTab(FILES_TAB_INDEX)),
     onRequestCloseBackdropLibrary: () => dispatch(closeBackdropLibrary()),
     onRequestCloseCostumeLibrary: () => dispatch(closeCostumeLibrary()),

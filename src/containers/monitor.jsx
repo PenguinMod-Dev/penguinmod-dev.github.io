@@ -90,6 +90,10 @@ class Monitor extends React.Component {
             return true;
         }
         for (const key of Object.getOwnPropertyNames(nextProps)) {
+            // skip all the other things to check custom monitors and see if they need an update
+            if (key === 'value' && typeof nextProps[key] === 'object') {
+                return !nextProps[key]._monitorUpToDate;
+            }
             // Don't need to rerender when other monitors are moved.
             // monitorLayout is only used during initial layout.
             if (key !== 'monitorLayout' && nextProps[key] !== this.props[key]) {

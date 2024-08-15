@@ -23,12 +23,12 @@ const manuallyTrustExtension = url => {
 const isTrustedExtension = url => (
     // Always trust our official extension repostiory.
     url.startsWith('https://extensions.turbowarp.org/') ||
-    url.startsWith('https://extensions.penguinmod.site/') ||
     url.startsWith('https://extensions.penguinmod.com/') ||
     url.startsWith('https://penguinmod-extensions-gallery.vercel.app/') ||
 
     // Trust other people's galleries. These can be removed in the future, they will just show a pop-up on load if they are.
     url.startsWith('https://sharkpools-extensions.vercel.app/') || // SharkPool
+    url.startsWith('https://pen-group.github.io/') || // Pen-Group / ObviousAlexC
 
     // For development.
     url.startsWith('http://localhost:8000') ||
@@ -66,8 +66,6 @@ const isAlwaysTrustedForFetching = parsed => (
     parsed.origin.endsWith('.turbowarp.xyz') ||
 
     // Any PenguinMod service such as projects
-    parsed.origin === 'https://penguinmod.site' ||
-    parsed.origin.endsWith('.penguinmod.site') ||
     parsed.origin === 'https://penguinmod.com' ||
     parsed.origin.endsWith('.penguinmod.com') ||
 
@@ -114,7 +112,7 @@ let allowedVideo = false;
 let allowedReadClipboard = false;
 let allowedNotify = false;
 let allowedGeolocation = false;
-const notAllowedToAskUnsandbox = Object.create({});
+const notAllowedToAskUnsandbox = Object.create(null);
 let loadingExtensionsRemember = false;
 let rememberedExtensionInfo = {
     unsandboxed: false,

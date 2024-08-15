@@ -15,6 +15,7 @@ const ADD_COMPILE_ERROR = 'tw/ADD_COMPILE_ERROR';
 const CLEAR_COMPILE_ERRORS = 'tw/CLEAR_COMPILE_ERRORS';
 const SET_FILE_HANDLE = 'tw/SET_FILE_HANDLE';
 const SET_USERNAME_INVALID = 'tw/SET_USERNAME_INVALID';
+const SET_USERNAME_LOGGED_IN = 'tw/SET_USERNAME_LOGGED_IN';
 const SET_HAS_CLOUD_VARIABLES = 'tw/SET_HAS_CLOUD_VARIABLES';
 const SET_CLOUD_HOST = 'tw/SET_CLOUD_HOST';
 
@@ -61,6 +62,7 @@ export const initialState = {
     compileErrors: [],
     fileHandle: null,
     usernameInvalid: false,
+    usernameLoggedIn: false,
     hasCloudVariables: false,
     cloudHost: ''
 };
@@ -138,6 +140,10 @@ const reducer = function (state, action) {
     case SET_USERNAME_INVALID:
         return Object.assign({}, state, {
             usernameInvalid: action.usernameInvalid
+        });
+    case SET_USERNAME_LOGGED_IN:
+        return Object.assign({}, state, {
+            usernameLoggedIn: action.usernameLoggedIn
         });
     case SET_HAS_CLOUD_VARIABLES:
         return Object.assign({}, state, {
@@ -270,6 +276,13 @@ const setUsernameInvalid = function (usernameInvalid) {
     };
 };
 
+const setUsernameLoggedIn = function (usernameLoggedIn) {
+    return {
+        type: SET_USERNAME_LOGGED_IN,
+        usernameLoggedIn: usernameLoggedIn
+    };
+};
+
 const setHasCloudVariables = function (hasCloudVariables) {
     return {
         type: SET_HAS_CLOUD_VARIABLES,
@@ -304,6 +317,7 @@ export {
     clearCompileErrors,
     setFileHandle,
     setUsernameInvalid,
+    setUsernameLoggedIn,
     setHasCloudVariables,
     setCloudHost
 };

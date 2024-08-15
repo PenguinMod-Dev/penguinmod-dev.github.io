@@ -47,6 +47,10 @@
 .checkbox:hover {
     border: 2px solid $motion-primary;
 }
+[dir="rtl"] .checkbox {
+    margin-right: initial;
+    margin-left: 4px;
+}
 
 .checkbox:checked {
     border: 2px solid $motion-primary;
